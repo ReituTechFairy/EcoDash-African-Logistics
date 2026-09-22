@@ -28,7 +28,7 @@
   <!--Game Area
   Contains the acual game.
   -->
-  <main id="gameArea" class=""hidden></main>
+  <main id="gameArea"></main>
 
   <h1>EcoDash</h1>
 
@@ -60,12 +60,11 @@
         </section>
 
         <!--Canvas-->
-  <canvas></canvas>
+  <canvas id="gameCanvas"></canvas>
 
   <!--Game controls-->
 
-  <section
- class="controls">
+  <section class="controls">
 
       <button id="pauseButton">Pause</button>
 
@@ -73,9 +72,9 @@
 
       <p>Use the arrow keys to move</p>
   
-    </section>
+  </section>
 
-  </main>
+
 
   <!--PAUSE SCREEN-->
 
@@ -118,11 +117,9 @@
   </div>
 
     
-  <script src = "js/game.js"></script>
-
-  <script src = "js/obstacle.js"></script>
-
-  <script src = "js/player.js"></script>
+<script src="js/player.js"></script>
+<script src="js/obstacle.js"></script>
+<script src="js/game.js"></script>
 
 </body>
 </html>
