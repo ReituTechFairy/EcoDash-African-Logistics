@@ -11,6 +11,14 @@ const keys = {};
 // Creates the player
 const player = new Player(100, 280);
 
+//Creates obstacles in the game
+const obstacles = [
+    new Obstacle(300, 200, 50, 50, "pothole"),
+    new Obstacle(500, 350, 120, 30, "tree"),
+    new Obstacle(700, 150, 150, 80, "river"),
+    new Obstacle(400, 100, 100, 50, "construction")
+];
+
 // Checks when a key is pressed
 document.addEventListener("keydown", function(event) {
 
@@ -44,6 +52,11 @@ function drawGame() {
 
     // Draw the player
     player.draw(ctx);
+
+    //Draw the obstacles
+    for (let obstacle of obstacles) {
+        obstacle.draw(ctx);
+    }
 
 }
 
