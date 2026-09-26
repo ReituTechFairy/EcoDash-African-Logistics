@@ -13,7 +13,7 @@ class Obstacle {
     this.width = width;
     this.height = height;
 
-    //Type of obstacle (e.g., "tree", "rock", "pothole")
+    //Type of obstacle
     this.type = type;
 
   }
@@ -32,6 +32,7 @@ class Obstacle {
         this.y + this.height / 2, 
         this.width / 2, 0, Math.PI * 2
       );
+
       ctx.fill();
     }
 
@@ -73,6 +74,37 @@ class Obstacle {
         this.width, 
         this.height
       );
+    }
+
+    //Solar Microgrid Zone
+    if (this.type === "solar") {
+
+      //Draw the solar area
+      ctx.fillStyle = "#f2c94c";
+
+      ctx.fillRect(
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
+
+      //Draw lines to make it look like solar panels
+      ctx.strokeStyle = "#333";
+      ctx.lineWidth = 2;
+
+      ctx.beginPath();
+
+      ctx.moveTo(this.x + 20, this.y);
+      ctx.lineTo(this.x + 20, this.y + this.height);
+
+      ctx.moveTo(this.x + 40, this.y);
+      ctx.lineTo(this.x + 40, this.y + this.height);
+
+      ctx.moveTo(this.x + 60, this.y);
+      ctx.lineTo(this.x + 60, this.y + this.height);
+
+      ctx.stroke();
     }
 
   }

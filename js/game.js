@@ -17,6 +17,9 @@ let distance = 0;
 // Stores the battery level when the game starts
 let startingBattery = 100;
 
+// Tracks the total battery used during the game
+let totalBatteryUsed = 0;
+
 // Load the saved high score
 let highScore = Number(localStorage.getItem("ecoDashHighScore")) || 0;
 
@@ -38,6 +41,17 @@ const obstacles = [
     new Obstacle(400, 100, 100, 50, "construction")
 
 ];
+
+// Solar Microgrid Zone
+const solarZone = new Obstacle(
+    150,
+    100,
+    120,
+    80,
+    "solar"
+);
+
+
 
 // Checks when a key is pressed
 document.addEventListener("keydown", function(event) {
@@ -64,6 +78,7 @@ document.addEventListener("keydown", function(event) {
         gameState = "playing";
 
     }
+
     // Restart the game
 if (key === "r" && gameState === "gameover") {
 
@@ -76,6 +91,11 @@ if (key === "r" && gameState === "gameover") {
     player.battery = 100;
 
     player.collisionCooldown = 0;
+
+    // Reset game statistics
+    totalBatteryUsed = 0;
+    distance = 0;
+    score = 0;
 
     gameState = "playing";
 
@@ -100,22 +120,24 @@ function updateGame() {
     // Calculate how much the vehicle moved this frame
 let movement = Math.abs(player.vx) + Math.abs(player.vy);
 
-// Adds movement to the distance
+// Calculate how much battery was used this frame
+let batteryUsedThisFrame = movement * 0.002;
+
+// Track the total battery used
+totalBatteryUsed += batteryUsedThisFrame;
+
+// Add to distance
 distance += movement * 0.1;
 
-// Increases the score as the vehicle travels
-score += movement * 0.05;
+// Add to score
+score += movement * 0.05; 
 
-// Calculate how much battery has been used
-let batteryUsed = startingBattery - player.battery;
-
-// Calculate distance travelled for each 1% of battery used
+// Calculate efficiency using the total battery used
 let efficiency = 0;
 
-if (batteryUsed > 0) {
-    efficiency = distance / batteryUsed;
+if (totalBatteryUsed > 0) {
+    efficiency = distance / totalBatteryUsed;
 }
-
 
 
 // Check if the current score is higher than the high score
@@ -146,44 +168,39 @@ if (score > highScore) {
                 console.log("Hit a " + obstacle.type);
 
                 // Pothole slows the vehicle
-                if (obstacle.type === "pothole") {
+               if (obstacle.type === "pothole") {
+    player.vx *= 0.5;
+    player.vy *= 0.5;
 
-                    player.vx *= 0.5;
-                    player.vy *= 0.5;
-
-                    // Small battery penalty
-                    player.battery -= 1;
-                }
-
+    player.battery -= 1;
+    totalBatteryUsed += 1;
+}
                 // Fallen tree stops the vehicle
                 if (obstacle.type === "tree") {
+    player.vx = 0;
+    player.vy = 0;
 
-                    player.vx = 0;
-                    player.vy = 0;
-
-                    // Battery penalty
-                    player.battery -= 2;
-                }
+    player.battery -= 2;
+    totalBatteryUsed += 2;
+}
 
                 // River greatly slows the vehicle
                 if (obstacle.type === "river") {
+    player.vx *= 0.4;
+    player.vy *= 0.4;
 
-                    player.vx *= 0.4;
-                    player.vy *= 0.4;
-
-                    // Battery penalty
-                    player.battery -= 2;
-                }
+    player.battery -= 2;
+    totalBatteryUsed += 2;
+}
 
                 // Construction area slows the vehicle
                 if (obstacle.type === "construction") {
+    player.vx *= 0.6;
+    player.vy *= 0.6;
 
-                    player.vx *= 0.6;
-                    player.vy *= 0.6;
-
-                    // Battery penalty
-                    player.battery -= 1;
-                }
+    player.battery -= 1;
+    totalBatteryUsed += 1;
+}
 
                 // Prevent battery from going below zero
                 if (player.battery < 0) {
@@ -198,6 +215,25 @@ if (score > highScore) {
         }
 
     }
+
+    // Check if the vehicle is inside the Solar Microgrid Zone
+if (
+    player.x < solarZone.x + solarZone.width &&
+    player.x + player.width > solarZone.x &&
+    player.y < solarZone.y + solarZone.height &&
+    player.y + player.height > solarZone.y
+) {
+
+    // Recharge the battery
+    player.battery += 0.2;
+
+    // Prevent the battery from going above 100
+    if (player.battery > 100) {
+        player.battery = 100;
+    }
+}
+
+
 
     // Updates the battery displayed on the HUD
     document.getElementById("battery").textContent =
@@ -243,6 +279,9 @@ function drawGame() {
         obstacle.draw(ctx);
 
     }
+
+    // Draw the Solar Microgrid Zone
+solarZone.draw(ctx);
 
     // Display the start screen
 if (gameState === "start") {
