@@ -14,6 +14,12 @@ let score = 0;
 // Stores the distance travelled
 let distance = 0;
 
+// Stores the battery level when the game starts
+let startingBattery = 100;
+
+// Load the saved high score
+let highScore = Number(localStorage.getItem("ecoDashHighScore")) || 0;
+
 // Stores which keys are currently being pressed
 const keys = {};
 
@@ -100,6 +106,30 @@ distance += movement * 0.1;
 // Increases the score as the vehicle travels
 score += movement * 0.05;
 
+// Calculate how much battery has been used
+let batteryUsed = startingBattery - player.battery;
+
+// Calculate distance travelled for each 1% of battery used
+let efficiency = 0;
+
+if (batteryUsed > 0) {
+    efficiency = distance / batteryUsed;
+}
+
+
+
+// Check if the current score is higher than the high score
+if (score > highScore) {
+
+    highScore = score;
+
+    // Save the new high score
+    localStorage.setItem(
+        "ecoDashHighScore",
+        Math.floor(highScore)
+    );
+}
+
     // Check for collisions with obstacles
     for (let obstacle of obstacles) {
 
@@ -180,6 +210,14 @@ document.getElementById("score").textContent =
 // Updates the distance displayed on the HUD
 document.getElementById("distance").textContent =
     Math.floor(distance);
+
+    // Update the efficiency displayed on the HUD
+document.getElementById("efficiency").textContent =
+    efficiency.toFixed(1);
+
+    // Update the high score displayed on the HUD
+document.getElementById("highScore").textContent =
+    Math.floor(highScore);
 
         // Check if the battery has run out
         if (player.battery <= 0) {
