@@ -5,6 +5,15 @@ canvas.height = 600;
 
 let ctx = canvas.getContext("2d");
 
+// Stores the current state of the game
+let gameState = "start";
+
+// Stores the player's score
+let score = 0;
+
+// Stores the distance travelled
+let distance = 0;
+
 // Stores which keys are currently being pressed
 const keys = {};
 
@@ -27,7 +36,44 @@ const obstacles = [
 // Checks when a key is pressed
 document.addEventListener("keydown", function(event) {
 
-    keys[event.key.toLowerCase()] = true;
+    let key = event.key.toLowerCase();
+
+    keys[key] = true;
+
+    // Start the game by pressing Enter
+    if (key === "enter" && gameState === "start") {
+
+        gameState = "playing";
+
+    }
+
+    // Pause or resume the game using P
+    if (key === "p" && gameState === "playing") {
+
+        gameState = "paused";
+
+    }
+    else if (key === "p" && gameState === "paused") {
+
+        gameState = "playing";
+
+    }
+    // Restart the game
+if (key === "r" && gameState === "gameover") {
+
+    player.x = 100;
+    player.y = 280;
+
+    player.vx = 0;
+    player.vy = 0;
+
+    player.battery = 100;
+
+    player.collisionCooldown = 0;
+
+    gameState = "playing";
+
+}
 
 });
 
@@ -38,10 +84,21 @@ document.addEventListener("keyup", function(event) {
 
 });
 
+
+
 // Updates the game
 function updateGame() {
 
     player.update(keys, canvas.width, canvas.height);
+
+    // Calculate how much the vehicle moved this frame
+let movement = Math.abs(player.vx) + Math.abs(player.vy);
+
+// Adds movement to the distance
+distance += movement * 0.1;
+
+// Increases the score as the vehicle travels
+score += movement * 0.05;
 
     // Check for collisions with obstacles
     for (let obstacle of obstacles) {
@@ -112,10 +169,25 @@ function updateGame() {
 
     }
 
-    // Update the battery displayed on the HUD
+    // Updates the battery displayed on the HUD
     document.getElementById("battery").textContent =
         Math.floor(player.battery);
 
+        // Updates the score displayed on the HUD
+document.getElementById("score").textContent =
+    Math.floor(score);
+
+// Updates the distance displayed on the HUD
+document.getElementById("distance").textContent =
+    Math.floor(distance);
+
+        // Check if the battery has run out
+        if (player.battery <= 0) {
+
+        player.battery = 0;
+
+        gameState = "gameover";
+    }
 }
 
 // Draws everything on the Canvas
@@ -134,12 +206,97 @@ function drawGame() {
 
     }
 
+    // Display the start screen
+if (gameState === "start") {
+
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+
+    ctx.font = "40px Arial";
+    ctx.fillText(
+        "ECODASH",
+        canvas.width / 2,
+        250
+    );
+
+    ctx.font = "20px Arial";
+    ctx.fillText(
+        "Press ENTER to start",
+        canvas.width / 2,
+        300
+    );
+
+}
+
+// Display the pause screen
+if (gameState === "paused") {
+
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+
+    ctx.font = "40px Arial";
+    ctx.fillText(
+        "GAME PAUSED",
+        canvas.width / 2,
+        280
+    );
+
+    ctx.font = "20px Arial";
+    ctx.fillText(
+        "Press P to continue",
+        canvas.width / 2,
+        320
+    );
+
+}
+
+// Display the game over screen
+if (gameState === "gameover") {
+
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+
+    ctx.font = "40px Arial";
+    ctx.fillText(
+        "GAME OVER",
+        canvas.width / 2,
+        270
+    );
+
+    ctx.font = "20px Arial";
+    ctx.fillText(
+        "Battery depleted",
+        canvas.width / 2,
+        310
+    );
+
+    ctx.fillText(
+        "Press R to restart",
+        canvas.width / 2,
+        350
+    );
+
+}
+
 }
 
 // Game loop
 function gameLoop() {
 
-    updateGame();
+    // Only updates the game while it is playing
+    if (gameState === "playing") {
+        updateGame();
+    }
+
     drawGame();
 
     requestAnimationFrame(gameLoop);
