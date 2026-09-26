@@ -31,9 +31,17 @@ class Player {
     //Starting battery level
     this.battery = 100;
 
+    // Prevents collision effects from happening repeatedly
+    this.collisionCooldown = 0;
+
   }
 
   update(keys, canvasWidth, canvasHeight) {
+
+// Reduce the collision cooldown over time
+if (this.collisionCooldown > 0) {
+  this.collisionCooldown--;//makes the number go down
+}
 
 //To turn the vehicle left
 if (keys["a"]) {
