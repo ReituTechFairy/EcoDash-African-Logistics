@@ -247,8 +247,8 @@ function updateTime() {
     // 60 frames is approximately one second.
     timeElapsed += 1 / 60;
 
-    // Restart the cycle after 60 seconds
-    if (timeElapsed >= 60) {
+    // Restart the cycle after 24 seconds
+    if (timeElapsed >= 24) {
 
         timeElapsed = 0;
 
@@ -257,26 +257,26 @@ function updateTime() {
 
     }
 
-    // First 20 seconds = daytime
-    if (timeElapsed < 20) {
+    // First 8 seconds = daytime
+    if (timeElapsed < 8) {
 
         darkness = 0;
 
     }
 
-    // 20 to 40 seconds = night
-    else if (timeElapsed < 40) {
+    // 8 to 16 seconds = night
+    else if (timeElapsed < 16) {
 
         // Gradually become darker
-        darkness = (timeElapsed - 20) / 20;
+        darkness = (timeElapsed - 8) / 8;
 
     }
 
-    // 40 to 60 seconds = becoming bright again
+    // 16 to 24 seconds = becoming bright again
     else {
 
         // Gradually become lighter
-        darkness = 1 - ((timeElapsed - 40) / 20);
+        darkness = 1 - ((timeElapsed - 16) / 8);
 
     }
 
@@ -292,6 +292,7 @@ function updateTime() {
 
     }
 }
+
 
 
 // Updates the rain
@@ -329,9 +330,13 @@ function drawRain() {
         return;
     }
 
-    ctx.strokeStyle = "rgba(180, 210, 255, 0.7)";
-    ctx.lineWidth = 1;
+    // Make the rain dark so it is easy to see
+    ctx.strokeStyle = "rgba(40, 60, 80, 0.8)";
 
+    // Make the rain drops slightly thicker
+    ctx.lineWidth = 2;
+
+    // Draw each rain drop
     for (let drop of rainDrops) {
 
         ctx.beginPath();
@@ -347,7 +352,22 @@ function drawRain() {
 
     }
 
+    // Add a light transparent overlay
+    // to reduce visibility while it is raining
+    ctx.fillStyle = "rgba(100, 120, 140, 0.15)";
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
 }
+
+
+
+
 
 
 // Draws the darkness over the game
