@@ -72,7 +72,7 @@ const solarZone = new Obstacle(
 );
 
 // Start the game when the Start Mission button is clicked
-document.getElementById("startButton").addEventListener("click", function() {
+document.getElementById("startButton").addEventListener("click", function () {
 
     // Start the game
     gameState = "playing";
@@ -86,19 +86,19 @@ document.getElementById("startButton").addEventListener("click", function() {
         block: "start"
     });
 
-}); 
+});
 
 // Checks when a key is pressed
-document.addEventListener("keydown", function(event) {
+document.addEventListener("keydown", function (event) {
 
     // Start the audio system after the player interacts
-if (!audioContext) {
-    audioContext = new AudioContext();
-}
+    if (!audioContext) {
+        audioContext = new AudioContext();
+    }
 
-if (audioContext.state === "suspended") {
-    audioContext.resume();
-}
+    if (audioContext.state === "suspended") {
+        audioContext.resume();
+    }
 
     let key = event.key.toLowerCase();
 
@@ -110,13 +110,13 @@ if (audioContext.state === "suspended") {
         gameState = "playing";
 
         // Hide the start screen
-    document.getElementById("startScreen").classList.add("hidden");
+        document.getElementById("startScreen").classList.add("hidden");
 
-    // Jump to the game canvas
-    document.getElementById("gameCanvas").scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
+        // Jump to the game canvas
+        document.getElementById("gameCanvas").scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
 
     }
 
@@ -127,7 +127,7 @@ if (audioContext.state === "suspended") {
 
 
     }
-    
+
     else if (key === "p" && gameState === "paused") {
 
         gameState = "playing";
@@ -135,31 +135,31 @@ if (audioContext.state === "suspended") {
     }
 
     // Restart the game
-if (key === "r" && gameState === "gameover") {
+    if (key === "r" && gameState === "gameover") {
 
-    player.x = 100;
-    player.y = 280;
+        player.x = 100;
+        player.y = 280;
 
-    player.vx = 0;
-    player.vy = 0;
+        player.vx = 0;
+        player.vy = 0;
 
-    player.battery = 100;
+        player.battery = 100;
 
-    player.collisionCooldown = 0;
+        player.collisionCooldown = 0;
 
-    // Reset game statistics
-    totalBatteryUsed = 0;
-    distance = 0;
-    score = 0;
+        // Reset game statistics
+        totalBatteryUsed = 0;
+        distance = 0;
+        score = 0;
 
-    gameState = "playing";
+        gameState = "playing";
 
-}
+    }
 
 });
 
 // Checks when a key is released
-document.addEventListener("keyup", function(event) {
+document.addEventListener("keyup", function (event) {
 
     keys[event.key.toLowerCase()] = false;
 
@@ -184,7 +184,7 @@ function playCollisionSound() {
     gain.connect(audioContext.destination);
 
     // // Set the frequency for a short impact sound when the vehicle hits an obstacle
-oscillator.frequency.value = 200;
+    oscillator.frequency.value = 200;
 
     oscillator.frequency.value = 200;
 
@@ -390,7 +390,7 @@ function drawDayNight() {
     }
 
 }
-    
+
 // Create the rain drops when the game loads
 createRain();
 
@@ -398,47 +398,47 @@ createRain();
 function updateGame() {
 
     // Update the day/night cycle
-updateTime();
+    updateTime();
 
-// Update the rain
-updateRain();
+    // Update the rain
+    updateRain();
 
     player.update(keys, canvas.width, canvas.height);
 
     // Calculate how much the vehicle moved this frame
-let movement = Math.abs(player.vx) + Math.abs(player.vy);
+    let movement = Math.abs(player.vx) + Math.abs(player.vy);
 
-// Calculate how much battery was used this frame
-let batteryUsedThisFrame = movement * 0.002;
+    // Calculate how much battery was used this frame
+    let batteryUsedThisFrame = movement * 0.002;
 
-// Track the total battery used
-totalBatteryUsed += batteryUsedThisFrame;
+    // Track the total battery used
+    totalBatteryUsed += batteryUsedThisFrame;
 
-// Add to distance
-distance += movement * 0.1;
+    // Add to distance
+    distance += movement * 0.1;
 
-// Add to score
-score += movement * 0.05; 
+    // Add to score
+    score += movement * 0.05;
 
-// Calculate efficiency using the total battery used
-let efficiency = 0;
+    // Calculate efficiency using the total battery used
+    let efficiency = 0;
 
-if (totalBatteryUsed > 0) {
-    efficiency = distance / totalBatteryUsed;
-}
+    if (totalBatteryUsed > 0) {
+        efficiency = distance / totalBatteryUsed;
+    }
 
 
-// Check if the current score is higher than the high score
-if (score > highScore) {
+    // Check if the current score is higher than the high score
+    if (score > highScore) {
 
-    highScore = score;
+        highScore = score;
 
-    // Save the new high score
-    localStorage.setItem(
-        "ecoDashHighScore",
-        Math.floor(highScore)
-    );
-}
+        // Save the new high score
+        localStorage.setItem(
+            "ecoDashHighScore",
+            Math.floor(highScore)
+        );
+    }
 
     // Check for collisions with obstacles
     for (let obstacle of obstacles) {
@@ -458,39 +458,39 @@ if (score > highScore) {
                 playCollisionSound();
 
                 // Pothole slows the vehicle
-               if (obstacle.type === "pothole") {
-    player.vx *= 0.5;
-    player.vy *= 0.5;
+                if (obstacle.type === "pothole") {
+                    player.vx *= 0.5;
+                    player.vy *= 0.5;
 
-    player.battery -= 1;
-    totalBatteryUsed += 1;
-}
+                    player.battery -= 1;
+                    totalBatteryUsed += 1;
+                }
                 // Fallen tree stops the vehicle
                 if (obstacle.type === "tree") {
-    player.vx = 0;
-    player.vy = 0;
+                    player.vx = 0;
+                    player.vy = 0;
 
-    player.battery -= 2;
-    totalBatteryUsed += 2;
-}
+                    player.battery -= 2;
+                    totalBatteryUsed += 2;
+                }
 
                 // River greatly slows the vehicle
                 if (obstacle.type === "river") {
-    player.vx *= 0.4;
-    player.vy *= 0.4;
+                    player.vx *= 0.4;
+                    player.vy *= 0.4;
 
-    player.battery -= 2;
-    totalBatteryUsed += 2;
-}
+                    player.battery -= 2;
+                    totalBatteryUsed += 2;
+                }
 
                 // Construction area slows the vehicle
                 if (obstacle.type === "construction") {
-    player.vx *= 0.6;
-    player.vy *= 0.6;
+                    player.vx *= 0.6;
+                    player.vy *= 0.6;
 
-    player.battery -= 1;
-    totalBatteryUsed += 1;
-}
+                    player.battery -= 1;
+                    totalBatteryUsed += 1;
+                }
 
                 // Prevent battery from going below zero
                 if (player.battery < 0) {
@@ -507,21 +507,21 @@ if (score > highScore) {
     }
 
     // Check if the vehicle is inside the Solar Microgrid Zone
-if (
-    player.x < solarZone.x + solarZone.width &&
-    player.x + player.width > solarZone.x &&
-    player.y < solarZone.y + solarZone.height &&
-    player.y + player.height > solarZone.y
-) {
+    if (
+        player.x < solarZone.x + solarZone.width &&
+        player.x + player.width > solarZone.x &&
+        player.y < solarZone.y + solarZone.height &&
+        player.y + player.height > solarZone.y
+    ) {
 
-    // Recharge the battery
-    player.battery += 0.2;
+        // Recharge the battery
+        player.battery += 0.2;
 
-    // Prevent the battery from going above 100
-    if (player.battery > 100) {
-        player.battery = 100;
+        // Prevent the battery from going above 100
+        if (player.battery > 100) {
+            player.battery = 100;
+        }
     }
-}
 
 
 
@@ -529,24 +529,24 @@ if (
     document.getElementById("battery").textContent =
         Math.floor(player.battery);
 
-        // Updates the score displayed on the HUD
-document.getElementById("score").textContent =
-    Math.floor(score);
+    // Updates the score displayed on the HUD
+    document.getElementById("score").textContent =
+        Math.floor(score);
 
-// Updates the distance displayed on the HUD
-document.getElementById("distance").textContent =
-    Math.floor(distance);
+    // Updates the distance displayed on the HUD
+    document.getElementById("distance").textContent =
+        Math.floor(distance);
 
     // Update the efficiency displayed on the HUD
-document.getElementById("efficiency").textContent =
-    efficiency.toFixed(1);
+    document.getElementById("efficiency").textContent =
+        efficiency.toFixed(1);
 
     // Update the high score displayed on the HUD
-document.getElementById("highScore").textContent =
-    Math.floor(highScore);
+    document.getElementById("highScore").textContent =
+        Math.floor(highScore);
 
-        // Check if the battery has run out
-        if (player.battery <= 0) {
+    // Check if the battery has run out
+    if (player.battery <= 0) {
 
         player.battery = 0;
 
@@ -564,10 +564,10 @@ function drawGame() {
     player.draw(ctx);
 
     // Draw the rain
-drawRain();
+    drawRain();
 
-// Draw the day/night darkness
-drawDayNight();
+    // Draw the day/night darkness
+    drawDayNight();
 
     // Draw the obstacles
     for (let obstacle of obstacles) {
@@ -577,88 +577,88 @@ drawDayNight();
     }
 
     // Draw the Solar Microgrid Zone
-solarZone.draw(ctx);
+    solarZone.draw(ctx);
 
     // Display the start screen
-if (gameState === "start") {
+    if (gameState === "start") {
 
-    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = "white";
-    ctx.textAlign = "center";
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
 
-    ctx.font = "40px Arial";
-    ctx.fillText(
-        "ECODASH",
-        canvas.width / 2,
-        250
-    );
+        ctx.font = "40px Arial";
+        ctx.fillText(
+            "ECODASH",
+            canvas.width / 2,
+            250
+        );
 
-    ctx.font = "20px Arial";
-    ctx.fillText(
-        "Press ENTER to start",
-        canvas.width / 2,
-        300
-    );
+        ctx.font = "20px Arial";
+        ctx.fillText(
+            "Press ENTER to start",
+            canvas.width / 2,
+            300
+        );
 
-}
+    }
 
-// Display the pause screen
-if (gameState === "paused") {
+    // Display the pause screen
+    if (gameState === "paused") {
 
-    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = "white";
-    ctx.textAlign = "center";
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
 
-    ctx.font = "40px Arial";
-    ctx.fillText(
-        "GAME PAUSED",
-        canvas.width / 2,
-        280
-    );
+        ctx.font = "40px Arial";
+        ctx.fillText(
+            "GAME PAUSED",
+            canvas.width / 2,
+            280
+        );
 
-    ctx.font = "20px Arial";
-    ctx.fillText(
-        "Press P to continue",
-        canvas.width / 2,
-        320
-    );
+        ctx.font = "20px Arial";
+        ctx.fillText(
+            "Press P to continue",
+            canvas.width / 2,
+            320
+        );
 
-}
+    }
 
-// Display the game over screen
-if (gameState === "gameover") {
+    // Display the game over screen
+    if (gameState === "gameover") {
 
-    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = "white";
-    ctx.textAlign = "center";
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
 
-    ctx.font = "40px Arial";
-    ctx.fillText(
-        "GAME OVER",
-        canvas.width / 2,
-        270
-    );
+        ctx.font = "40px Arial";
+        ctx.fillText(
+            "GAME OVER",
+            canvas.width / 2,
+            270
+        );
 
-    ctx.font = "20px Arial";
-    ctx.fillText(
-        "Battery depleted",
-        canvas.width / 2,
-        310
-    );
+        ctx.font = "20px Arial";
+        ctx.fillText(
+            "Battery depleted",
+            canvas.width / 2,
+            310
+        );
 
-    ctx.fillText(
-        "Press R to restart",
-        canvas.width / 2,
-        350
-    );
+        ctx.fillText(
+            "Press R to restart",
+            canvas.width / 2,
+            350
+        );
 
-}
+    }
 
 }
 

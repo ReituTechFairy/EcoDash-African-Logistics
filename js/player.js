@@ -2,7 +2,7 @@
 //This class will control the EcoDash delivery vehicle
 
 class Player {
-  constructor(x, y){
+  constructor(x, y) {
 
     //Position of vehicle on canvas
     this.x = x;
@@ -38,32 +38,32 @@ class Player {
 
   update(keys, canvasWidth, canvasHeight) {
 
-// Reduce the collision cooldown over time
-if (this.collisionCooldown > 0) {
-  this.collisionCooldown--;//makes the number go down
-}
+    // Reduce the collision cooldown over time
+    if (this.collisionCooldown > 0) {
+      this.collisionCooldown--;//makes the number go down
+    }
 
-//To turn the vehicle left
-if (keys["a"]) {
-  this.angle -= 0.05;
-}
+    //To turn the vehicle left
+    if (keys["a"]) {
+      this.angle -= 0.05;
+    }
 
-//To turn the vehicle right
-if (keys["d"]) {
-  this.angle += 0.05;
-}
+    //To turn the vehicle right
+    if (keys["d"]) {
+      this.angle += 0.05;
+    }
 
-//To move the vehicle forward
-if (keys["w"]) {
-  this.vx += Math.cos(this.angle) * this.acc;
-  this.vy += Math.sin(this.angle) * this.acc;
-}
+    //To move the vehicle forward
+    if (keys["w"]) {
+      this.vx += Math.cos(this.angle) * this.acc;
+      this.vy += Math.sin(this.angle) * this.acc;
+    }
 
-//To move the vehicle backwards
-if (keys["s"]) {
-  this.vx -= Math.cos(this.angle) * this.acc;
-  this.vy -= Math.sin(this.angle) * this.acc;
-}
+    //To move the vehicle backwards
+    if (keys["s"]) {
+      this.vx -= Math.cos(this.angle) * this.acc;
+      this.vy -= Math.sin(this.angle) * this.acc;
+    }
 
     //Gradually slow the vehicle down
     this.vx *= this.friction;

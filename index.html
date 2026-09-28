@@ -1,36 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EcoDash-African-Logistics</title>
-  <link rel = "stylesheet" href = "style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
   <!-- Start Screen - This will be displayed when the first opena-->
-  <div id= "startScreen" class="screen">
+  <div id="startScreen" class="screen">
 
     <h1>EcoDash</h1>
 
     <h2>African Digital Logistics & Infrastructure Simulator</h2>
 
     <p>
-      Delivers essential supplies accross an African environment while managing your battery and avoiding infrastructure challenges.
+      Delivers essential supplies accross an African environment while managing your battery and avoiding infrastructure
+      challenges.
     </p>
 
-      <section class="controls">
+    <section class="controls">
 
       <p>Use the "W" key to move forward</p>
       <p>Use the "S" key to move backward</p>
       <p>Use the "A" key to move left</p>
       <p>Use the "D" key to move right</p>
-  
-  </section>
 
-    <button id = "startButton">
-    Start Mission
-  </button>
+    </section>
+
+    <button id="startButton">
+      Start Mission
+    </button>
 
   </div>
 
@@ -41,48 +43,48 @@
 
   <!--<h1>EcoDash</h1>-->
 
-<!-- HUD (Heads Up Display)
+  <!-- HUD (Heads Up Display)
      Shows important game information -->
-<section class="hud">
+  <section class="hud">
 
     <div class="hud-item">
-        <span class="hud-label">Score</span>
-        <span id="score">0</span>
+      <span class="hud-label">Score</span>
+      <span id="score">0</span>
     </div>
 
     <div class="hud-item">
-        <span class="hud-label">Distance</span>
-        <span id="distance">0</span> m
+      <span class="hud-label">Distance</span>
+      <span id="distance">0</span> m
     </div>
 
     <div class="hud-item">
-        <span class="hud-label">Battery</span>
-        <span id="battery">100</span>%
+      <span class="hud-label">Battery</span>
+      <span id="battery">100</span>%
     </div>
 
     <div class="hud-item">
-        <span class="hud-label">Efficiency</span>
-        <span id="efficiency">0</span> m/%
+      <span class="hud-label">Efficiency</span>
+      <span id="efficiency">0</span> m/%
     </div>
 
     <div class="hud-item">
-        <span class="hud-label">High Score</span>
-        <span id="highScore">0</span>
+      <span class="hud-label">High Score</span>
+      <span id="highScore">0</span>
     </div>
 
-</section>
+  </section>
 
-        <!--Canvas-->
+  <!--Canvas-->
   <canvas id="gameCanvas"></canvas>
 
   <!--Game controls-->
 
   <section class="controls">
 
-      <button id="pauseButton">Pause</button>
+    <button id="pauseButton">Pause</button>
 
-      <button id="restartButton">Restart</button>
-  
+    <button id="restartButton">Restart</button>
+
   </section>
 
 
@@ -127,10 +129,11 @@
 
   </div>
 
-    
-<script src="js/player.js"></script>
-<script src="js/obstacle.js"></script>
-<script src="js/game.js"></script>
+
+  <script src="js/player.js"></script>
+  <script src="js/obstacle.js"></script>
+  <script src="js/game.js"></script>
 
 </body>
+
 </html>
