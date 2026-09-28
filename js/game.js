@@ -23,11 +23,18 @@ let startingBattery = 100;
 // Tracks the total battery used during the game
 let totalBatteryUsed = 0;
 
-// Load the saved high score
+// Loads the saved high score
 let highScore = Number(localStorage.getItem("ecoDashHighScore")) || 0;
 
 // Stores which keys are currently being pressed
 const keys = {};
+
+//Stores the time of day 
+let time = "day";
+
+//Stores the weather state
+let weather = "clear";
+
 
 // Creates the player
 const player = new Player(100, 280);
@@ -54,6 +61,23 @@ const solarZone = new Obstacle(
     "solar"
 );
 
+// Start the game when the Start Mission button is clicked
+document.getElementById("startButton").addEventListener("click", function() {
+
+    // Start the game
+    gameState = "playing";
+
+    // Hide the start screen
+    document.getElementById("startScreen").classList.add("hidden");
+
+    // Jump to the game canvas
+    document.getElementById("gameCanvas").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+}); 
+
 // Checks when a key is pressed
 document.addEventListener("keydown", function(event) {
 
@@ -75,6 +99,15 @@ if (audioContext.state === "suspended") {
 
         gameState = "playing";
 
+        // Hide the start screen
+    document.getElementById("startScreen").classList.add("hidden");
+
+    // Jump to the game canvas
+    document.getElementById("gameCanvas").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
     }
 
     // Pause or resume the game using P
@@ -82,7 +115,9 @@ if (audioContext.state === "suspended") {
 
         gameState = "paused";
 
+
     }
+    
     else if (key === "p" && gameState === "paused") {
 
         gameState = "playing";
@@ -153,8 +188,190 @@ oscillator.frequency.value = 200;
     oscillator.stop(audioContext.currentTime + 0.10);
 }
 
+//Day and Night system
+
+//Stores how many seconds have passed in the game
+
+let timeElapsed = 0;
+
+//Stores the current darkness level
+//0 = bright day 
+//1 = completely dark
+let darkness = 0;
+
+//Counts how many day/nighht cycles have happend
+let dayNightCycle = 0;
+
+//Weather system
+
+//Stores the rain drops 
+let rainDrops = [];
+
+// Controls whether it is currently raining
+let isRaining = false;
+
+
+// Creates the rain drops
+function createRain() {
+
+    rainDrops = [];
+
+    // Create 80 rain drops
+    for (let i = 0; i < 80; i++) {
+
+        rainDrops.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            speed: 4 + Math.random() * 4,
+            length: 10 + Math.random() * 10
+        });
+
+    }
+}
+
+
+// Updates the day/night cycle
+function updateTime() {
+
+    // The game loop runs many times per second.
+    // 60 frames is approximately one second.
+    timeElapsed += 1 / 60;
+
+    // Restart the cycle after 60 seconds
+    if (timeElapsed >= 60) {
+
+        timeElapsed = 0;
+
+        // Count another complete cycle
+        dayNightCycle++;
+
+    }
+
+    // First 20 seconds = daytime
+    if (timeElapsed < 20) {
+
+        darkness = 0;
+
+    }
+
+    // 20 to 40 seconds = night
+    else if (timeElapsed < 40) {
+
+        // Gradually become darker
+        darkness = (timeElapsed - 20) / 20;
+
+    }
+
+    // 40 to 60 seconds = becoming bright again
+    else {
+
+        // Gradually become lighter
+        darkness = 1 - ((timeElapsed - 40) / 20);
+
+    }
+
+    // Rain happens every second cycle
+    if (dayNightCycle % 2 === 1) {
+
+        isRaining = true;
+
+    }
+    else {
+
+        isRaining = false;
+
+    }
+}
+
+
+// Updates the rain
+function updateRain() {
+
+    // Only update rain when it is raining
+    if (!isRaining) {
+        return;
+    }
+
+    // Move every rain drop down the screen
+    for (let drop of rainDrops) {
+
+        drop.y += drop.speed;
+
+        // Move the rain drop back to the top
+        // when it reaches the bottom
+        if (drop.y > canvas.height) {
+
+            drop.y = -drop.length;
+            drop.x = Math.random() * canvas.width;
+
+        }
+
+    }
+
+}
+
+
+// Draws the rain
+function drawRain() {
+
+    // Do not draw rain when it is not raining
+    if (!isRaining) {
+        return;
+    }
+
+    ctx.strokeStyle = "rgba(180, 210, 255, 0.7)";
+    ctx.lineWidth = 1;
+
+    for (let drop of rainDrops) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(drop.x, drop.y);
+
+        ctx.lineTo(
+            drop.x - 3,
+            drop.y + drop.length
+        );
+
+        ctx.stroke();
+
+    }
+
+}
+
+
+// Draws the darkness over the game
+function drawDayNight() {
+
+    // Only draw the overlay when the environment
+    // is becoming darker
+    if (darkness > 0) {
+
+        ctx.fillStyle =
+            "rgba(10, 20, 50, " + (darkness * 0.65) + ")";
+
+        ctx.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+    }
+
+}
+    
+// Create the rain drops when the game loads
+createRain();
+
 // Updates the game
 function updateGame() {
+
+    // Update the day/night cycle
+updateTime();
+
+// Update the rain
+updateRain();
 
     player.update(keys, canvas.width, canvas.height);
 
@@ -315,6 +532,12 @@ function drawGame() {
 
     // Draw the player
     player.draw(ctx);
+
+    // Draw the rain
+drawRain();
+
+// Draw the day/night darkness
+drawDayNight();
 
     // Draw the obstacles
     for (let obstacle of obstacles) {
