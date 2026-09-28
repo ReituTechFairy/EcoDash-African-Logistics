@@ -50,21 +50,43 @@ h2 {
   padding: 20px;
 }
 
-/*HUD*/
+/* HUD */
 .hud {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 10px;
+  align-items: stretch;
+  gap: 12px;
+  max-width: 1000px;
+  margin: 20px auto 12px;
 }
 
-.hud div {
+/* Individual HUD boxes */
+.hud-item {
   flex: 1;
+  min-width: 0;
   padding: 12px;
   background-color: #fff8e7;
   border: 2px solid #6b4526;
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: bold;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* HUD labels */
+.hud-label {
+  display: block;
+  margin-bottom: 5px;
+  color: #6b4526;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* HUD values */
+.hud-item span:last-child {
+  display: block;
+  color: #2f6b3c;
+  font-size: 20px;
 }
 
 /*Canvas*/
@@ -116,11 +138,19 @@ button:hover {
     /*
        Stacks the HUD boxes vertically.
     */
-    .hud {
+.hud {
+    flex-wrap: wrap;
+    gap: 8px;
+}
 
-        flex-direction: column;
-    }
+.hud-item {
+    flex: 1 1 30%;
+    padding: 10px;
+}
 
+.hud-item span:last-child {
+    font-size: 17px;
+}
 
     /*
        Reduce the size of the start/pause/game-over panels.

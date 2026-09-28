@@ -5,6 +5,9 @@ canvas.height = 600;
 
 let ctx = canvas.getContext("2d");
 
+// Audio system
+let audioContext;
+
 // Stores the current state of the game
 let gameState = "start";
 
@@ -51,10 +54,17 @@ const solarZone = new Obstacle(
     "solar"
 );
 
-
-
 // Checks when a key is pressed
 document.addEventListener("keydown", function(event) {
+
+    // Start the audio system after the player interacts
+if (!audioContext) {
+    audioContext = new AudioContext();
+}
+
+if (audioContext.state === "suspended") {
+    audioContext.resume();
+}
 
     let key = event.key.toLowerCase();
 
@@ -110,7 +120,38 @@ document.addEventListener("keyup", function(event) {
 
 });
 
+// Creates a short sound when the vehicle hits an obstacle
+function playCollisionSound() {
 
+    // Do nothing if the audio system has not started
+    if (!audioContext) {
+        return;
+    }
+
+    // Create a sound oscillator
+    let oscillator = audioContext.createOscillator();
+
+    // Controls the volume
+    let gain = audioContext.createGain();
+
+    // Connect the sound components
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    // // Set the frequency for a short impact sound when the vehicle hits an obstacle
+oscillator.frequency.value = 200;
+
+    oscillator.frequency.value = 200;
+
+    // Set the volume
+    gain.gain.value = 0.7;
+
+    // Start the sound
+    oscillator.start();
+
+    // Stop the sound after a short time
+    oscillator.stop(audioContext.currentTime + 0.10);
+}
 
 // Updates the game
 function updateGame() {
@@ -166,6 +207,8 @@ if (score > highScore) {
             if (player.collisionCooldown === 0) {
 
                 console.log("Hit a " + obstacle.type);
+
+                playCollisionSound();
 
                 // Pothole slows the vehicle
                if (obstacle.type === "pothole") {

@@ -32,52 +32,36 @@
 
   <h1>EcoDash</h1>
 
-  <!--HUD (HUP - Heads Up Display)
-  It shows important game information-->
+<!-- HUD (Heads Up Display)
+     Shows important game information -->
+<section class="hud">
 
-   <section class="hud">
+    <div class="hud-item">
+        <span class="hud-label">Score</span>
+        <span id="score">0</span>
+    </div>
 
-            <div>
-                Score:
-                <span id="score">0</span>
-            </div>
+    <div class="hud-item">
+        <span class="hud-label">Distance</span>
+        <span id="distance">0</span> m
+    </div>
 
-            <div>
-                Distance:
-                <span id="distance">0</span> m
-            </div>
+    <div class="hud-item">
+        <span class="hud-label">Battery</span>
+        <span id="battery">100</span>%
+    </div>
 
-            <p>
-              High Score: 
-              <span id="highScore">0</span>
-            </p>
+    <div class="hud-item">
+        <span class="hud-label">Efficiency</span>
+        <span id="efficiency">0</span> m/%
+    </div>
 
-            <div>
-                Battery:
-                <span id="battery">100</span>%
-            </div>
+    <div class="hud-item">
+        <span class="hud-label">High Score</span>
+        <span id="highScore">0</span>
+    </div>
 
-            <p>
-              Score: 
-              <span id="score">0</span>
-            </p>
-
-            <p>
-              Distance: 
-              <span id="distance">0</span> m
-            </p>
-
-            <p>
-              Efficiency: 
-              <span id="efficiency">0</span> m/%
-            </p>
-            
-            <div>
-                Efficiency:
-                <span id="efficiency">100</span>%
-            </div>
-
-        </section>
+</section>
 
         <!--Canvas-->
   <canvas id="gameCanvas"></canvas>
