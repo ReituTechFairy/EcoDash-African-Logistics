@@ -1,26 +1,26 @@
-//Obstacle Class
-//This class creates obstacles that appear in the EcoDash environment
+// Obstacle Class
+// This class creates obstacles that appear in the EcoDash environment
 
 class Obstacle {
 
   constructor(x, y, width, height, type) {
 
-    //Position of the obstacle on the canvas
+    // Position of the obstacle on the canvas
     this.x = x;
     this.y = y;
 
-    //Size of the obstacle
+    // Size of the obstacle
     this.width = width;
     this.height = height;
 
-    //Type of obstacle
+    // Type of obstacle
     this.type = type;
 
   }
 
   draw(ctx) {
 
-    //Pothole
+    // Pothole
     if (this.type === "pothole") {
 
       ctx.fillStyle = "#333";
@@ -28,58 +28,108 @@ class Obstacle {
       ctx.beginPath();
 
       ctx.arc(
-        this.x + this.width / 2, 
-        this.y + this.height / 2, 
-        this.width / 2, 0, Math.PI * 2
+        this.x + this.width / 2,
+        this.y + this.height / 2,
+        this.width / 2,
+        0,
+        Math.PI * 2
       );
 
       ctx.fill();
     }
 
-    //Fallen Tree
+
+    // Fallen Tree
     if (this.type === "tree") {
 
+      // Draw the brown tree trunk
       ctx.fillStyle = "#6b4226";
 
       ctx.fillRect(
-        this.x, 
-        this.y, 
-        this.width, 
-        this.height
+        this.x,
+        this.y + 10,
+        this.width,
+        this.height - 20
       );
+
+
+      // Draw the circular end of the tree
+      ctx.fillStyle = "#8b5a2b";
+
+      ctx.beginPath();
+
+      ctx.arc(
+        this.x + this.width,
+        this.y + this.height / 2,
+        this.height / 2,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.fill();
+
+
+      // Draw a smaller circle inside
+      // to make the end look like a cut tree
+      ctx.fillStyle = "#c08a52";
+
+      ctx.beginPath();
+
+      ctx.arc(
+        this.x + this.width,
+        this.y + this.height / 2,
+        this.height / 4,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.fill();
 
     }
 
-    //River
+
+    // River
     if (this.type === "river") {
 
+      // Use an oval instead of a rectangle
       ctx.fillStyle = "#1e90ff";
 
-      ctx.fillRect(
-        this.x, 
-        this.y, 
-        this.width, 
-        this.height
+      ctx.beginPath();
+
+      ctx.ellipse(
+        this.x + this.width / 2,
+        this.y + this.height / 2,
+        this.width / 2,
+        this.height / 2,
+        0,
+        0,
+        Math.PI * 2
       );
+
+      ctx.fill();
+
     }
 
-    //Construction Area
+
+    // Construction Area
     if (this.type === "construction") {
 
       ctx.fillStyle = "#d99a2b";
 
       ctx.fillRect(
-        this.x, 
-        this.y, 
-        this.width, 
+        this.x,
+        this.y,
+        this.width,
         this.height
       );
+
     }
 
-    //Solar Microgrid Zone
+
+    // Solar Microgrid Zone
     if (this.type === "solar") {
 
-      //Draw the solar area
+      // Draw the solar area
       ctx.fillStyle = "#f2c94c";
 
       ctx.fillRect(
@@ -89,7 +139,8 @@ class Obstacle {
         this.height
       );
 
-      //Draw lines to make it look like solar panels
+
+      // Draw lines to make it look like solar panels
       ctx.strokeStyle = "#333";
       ctx.lineWidth = 2;
 
@@ -105,6 +156,7 @@ class Obstacle {
       ctx.lineTo(this.x + 60, this.y + this.height);
 
       ctx.stroke();
+
     }
 
   }

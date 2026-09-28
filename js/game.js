@@ -42,12 +42,22 @@ const player = new Player(100, 280);
 // Creates obstacles in the game
 const obstacles = [
 
+    // Pothole
     new Obstacle(300, 200, 50, 50, "pothole"),
 
+    // Fallen tree 1
     new Obstacle(500, 350, 120, 30, "tree"),
 
+    // Fallen tree 2
+    new Obstacle(650, 400, 120, 30, "tree"),
+
+    // Fallen tree 3
+    new Obstacle(300, 450, 120, 30, "tree"),
+
+    // River
     new Obstacle(700, 150, 150, 80, "river"),
 
+    // Construction area
     new Obstacle(400, 100, 100, 50, "construction")
 
 ];
